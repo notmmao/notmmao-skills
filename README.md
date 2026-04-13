@@ -1,12 +1,12 @@
 # notmmao-skills
-我的个人OpenClaw自定义技能仓库，收集我开发和修改的实用OpenClaw技能，均适配国内环境，开箱即用。
+我的个人通用AI Agent技能仓库，收集我开发和修改的实用技能，均适配国内环境，开箱即用，支持OpenClaw、Claude Desktop、Cursor、Obsidian Skills等所有支持Open Skills协议的运行环境，不绑定特定平台。
 
 ## ✨ 特性
+- 🔌 通用标准，兼容多种AI Agent运行环境
 - 🇨🇳 全部适配国内使用环境，无需翻墙
 - 🔒 无硬编码密钥，所有敏感配置从环境变量读取
 - ⚡ 均自带缓存机制，避免重复请求浪费资源
 - 📦 开箱即用，无需额外复杂配置
-- ✅ 兼容所有标准OpenClaw运行环境
 
 ## 📦 技能列表
 ### 音视频处理类
@@ -24,12 +24,25 @@
 | `volc-image-gen` | 火山引擎豆包AI绘画技能，支持文生图、图生图、多参考图融合，支持2K/4K超清分辨率，电影级画质 |
 
 ## 🚀 安装
-### 方法1：一键安装所有技能
+### 方法1：推荐使用npx安装（通用所有支持skills协议的平台）
+```bash
+# 全量安装所有技能
+npx skills add https://github.com/notmmao/notmmao-skills
+
+# 安装单个技能（示例：安装yt-audio-download）
+npx skills add https://github.com/notmmao/notmmao-skills --skill yt-audio-download
+
+# 升级已安装的技能
+npx skills upgrade https://github.com/notmmao/notmmao-skills
+```
+
+### 方法2：OpenClaw平台专属安装
+#### 一键安装所有技能
 ```bash
 openclaw skill install git+https://github.com/notmmao/notmmao-skills.git
 ```
 
-### 方法2：安装单个技能
+#### 安装单个技能
 ```bash
 # 示例：安装yt-audio-download
 openclaw skill install git+https://github.com/notmmao/notmmao-skills.git#subdirectory=skills/yt-audio-download
