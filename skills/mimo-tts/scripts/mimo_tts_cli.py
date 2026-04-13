@@ -1,4 +1,3 @@
-#!/home/ota/.openclaw/claw_venv/bin/python
 # -*- coding: utf-8 -*-
 """小米 MiMo 语音合成 CLI 工具
 支持基于小米 MiMo 官方 API 的文本转语音功能，自带缓存机制
@@ -11,10 +10,7 @@ import requests
 import base64
 import argparse
 from typing import Literal, Optional
-from dotenv import load_dotenv
 
-# 加载环境变量
-load_dotenv("/home/ota/.openclaw/.env")
 
 # API 配置
 _API_KEY = os.getenv("MIMO_API_KEY")
@@ -172,6 +168,7 @@ def mimo_text_to_speech(
 def main():
     parser = argparse.ArgumentParser(description="小米 MiMo 语音合成 CLI 工具")
     parser.add_argument("text", nargs="?", help="待合成的文本内容")
+    parser.add_argument("--file", "-F", help="从文件读取文本内容（优先级高于 text 参数）")
     parser.add_argument("-o", "--output", help="输出音频文件路径（可选，默认使用缓存）")
     parser.add_argument("-v", "--voice", default="mimo_default", choices=["mimo_default", "default_zh", "default_en"], help="音色类型，默认mimo_default")
     parser.add_argument("-f", "--format", default="mp3", choices=["mp3", "wav", "pcm"], help="音频格式，默认mp3")
@@ -181,8 +178,14 @@ def main():
 
     args = parser.parse_args()
 
-    # 从标准输入读取文本（如果没有提供text参数）
-    if not args.text:
+    # 优先从文件读取文本
+    if args.file:
+        if not os.path.exists(args.file):
+            print(f"❌ 错误: 文件不存在: {args.file}", file=sys.stderr)
+            sys.exit(1)
+        with open(args.file, "r", encoding="utf-8") as f:
+            args.text = f.read().strip()
+    elif not args.text:
         args.text = sys.stdin.read().strip()
 
     try:
