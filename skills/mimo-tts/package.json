@@ -1,0 +1,8 @@
+{
+  "name": "mimo-tts",
+  "version": "1.0.0",
+  "description": "基于小米 MiMo 官方 API 的文本转语音技能",
+  "main": "index.js",
+  "author": "notmmao",
+  "license": "MIT"
+}
