@@ -1,4 +1,76 @@
 # notmmao-skills
-我的OpenClaw自定义技能仓库，存放个人开发和修改的OpenClaw技能。
-## 技能列表
+我的个人OpenClaw自定义技能仓库，收集我开发和修改的实用OpenClaw技能，均适配国内环境，开箱即用。
 
+## ✨ 特性
+- 🇨🇳 全部适配国内使用环境，无需翻墙
+- 🔒 无硬编码密钥，所有敏感配置从环境变量读取
+- ⚡ 均自带缓存机制，避免重复请求浪费资源
+- 📦 开箱即用，无需额外复杂配置
+- ✅ 兼容所有标准OpenClaw运行环境
+
+## 📦 技能列表
+### 音视频处理类
+| 技能名 | 功能描述 |
+|--------|----------|
+| `yt-audio-download` | 基于yt-dlp的通用视频平台音频下载工具，支持B站、抖音、YouTube等主流平台，自动转换为192kbps MP3，内置去重缓存 |
+| `local-whisper-asr` | 完全离线的Whisper语音转写技能，支持几乎所有音视频格式，无需联网，输出txt/srt/vtt/json四种格式结果 |
+| `audio-transcribe-summary` | 音视频处理全流程技能：自动下载/提取音频 → 离线转写 → 结构化总结 → 自动导出Markdown/PDF，支持会议记录、课程整理、视频内容提取等场景 |
+
+### AI生成类
+| 技能名 | 功能描述 |
+|--------|----------|
+| `minimax-music` | MiniMax AI音乐生成技能，支持歌词生成音乐、风格自定义、旋律提取改编，生成高质量MP3格式音乐 |
+| `mimo-tts` | 小米MiMo语音合成技能，支持自定义音色、语速、朗读风格、方言，自带缓存，支持mp3/wav/pcm三种格式输出 |
+| `volc-image-gen` | 火山引擎豆包AI绘画技能，支持文生图、图生图、多参考图融合，支持2K/4K超清分辨率，电影级画质 |
+
+## 🚀 安装
+### 方法1：一键安装所有技能
+```bash
+openclaw skill install git+https://github.com/notmmao/notmmao-skills.git
+```
+
+### 方法2：安装单个技能
+```bash
+# 示例：安装yt-audio-download
+openclaw skill install git+https://github.com/notmmao/notmmao-skills.git#subdirectory=skills/yt-audio-download
+```
+
+### 方法3：手动安装
+1. 克隆仓库到本地：
+```bash
+git clone https://github.com/notmmao/notmmao-skills.git ~/.openclaw/skills/notmmao-skills
+```
+2. 在OpenClaw配置中添加技能目录即可。
+
+## 🔧 配置
+所有需要API密钥的技能，均从统一的环境变量配置文件`~/.openclaw/.env`中读取：
+```env
+# minimax-music 所需
+MINIMAX_API_KEY=你的MiniMax API密钥
+
+# mimo-tts 所需
+MIMO_API_KEY=你的小米MiMo API密钥
+MIMO_API_URL=可选，自定义API端点
+
+# volc-image-gen 所需
+ARK_API_KEY=你的火山引擎API密钥
+ARK_API_MODEL=可选，自定义模型版本
+```
+
+## 📝 使用
+安装完成后，即可通过自然语言触发对应技能，例如：
+- `帮我下载这个B站视频的音频：https://b23.tv/xxxxxx`
+- `用欢快的女声朗读这段内容：你好，我是你的AI助手`
+- `生成一张星际穿越风格的4K图片：黑洞旁的复古列车`
+- `总结这个视频的内容：https://www.douyin.com/video/xxxxxx`
+
+每个技能目录下的`SKILL.md`文件包含详细的使用说明和参数配置。
+
+## 🤝 贡献
+欢迎提交Issue和PR，新增技能或者改进现有功能：
+1. Fork本仓库
+2. 在`skills/`目录下新增你的技能，确保包含完整的`SKILL.md`说明和开源协议
+3. 提交PR即可
+
+## 📄 许可证
+所有技能均采用 [MIT License](./LICENSE) 开源，可自由使用、修改、分发。
