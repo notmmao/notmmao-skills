@@ -12,12 +12,8 @@ import base64
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
-from dotenv import load_dotenv
 
 import requests
-
-# 加载统一环境变量
-load_dotenv(os.path.expanduser("~/.openclaw/.env"))
 
 # 默认配置
 DEFAULT_MODEL = "music-2.6"
@@ -34,9 +30,9 @@ def get_api_key() -> str:
     """从环境变量获取 API Key"""
     api_key = os.environ.get("MINIMAX_API_KEY")
     if not api_key:
-        print("错误: 未找到 MINIMAX_API_KEY", file=sys.stderr)
-        print("\n请在 ~/.openclaw/.env 文件中添加配置:", file=sys.stderr)
-        print("  MINIMAX_API_KEY=你的MiniMax API密钥", file=sys.stderr)
+        print("错误: 未找到 MINIMAX_API_KEY 环境变量", file=sys.stderr)
+        print("\n请设置环境变量:", file=sys.stderr)
+        print("  export MINIMAX_API_KEY=你的MiniMax API密钥", file=sys.stderr)
         sys.exit(1)
     return api_key
 

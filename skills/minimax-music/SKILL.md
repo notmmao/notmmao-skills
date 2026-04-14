@@ -9,12 +9,16 @@ description: 使用 MiniMax API 生成音乐。当用户需要生成音乐、创
 
 ## 前置要求
 
-- 在 `~/.openclaw/.env` 文件中配置 `MINIMAX_API_KEY` 环境变量：
+需要设置 `MINIMAX_API_KEY` 环境变量：
+
+```bash
+export MINIMAX_API_KEY=你的MiniMax API密钥
+```
+
+或在你的运行环境支持的配置文件中添加：
 ```env
 MINIMAX_API_KEY=你的MiniMax API密钥
 ```
-
-- 依赖已预装在虚拟环境中，无需额外安装
 
 ## 使用方法
 

@@ -26,12 +26,20 @@ metadata: {"openclaw":{"emoji":"🎨","requires":{"env":["ARK_API_KEY"]}}}
 ✅ 默认自动缓存生成的图片到 ~/.cache/volc-image-gen/ 目录，自动去重命名
 
 ## 前置配置
-请确保在 `~/.openclaw/.env` 文件中配置相关参数：
-```env
+需要设置以下环境变量：
+
+```bash
 # 必填：火山引擎API密钥
+export ARK_API_KEY=你的火山引擎API密钥
+
+# 可选：默认使用的模型版本
+export ARK_API_MODEL=doubao-seedream-4-0-250828
+```
+
+或在你的运行环境支持的配置文件中添加：
+```env
 ARK_API_KEY=你的火山引擎API密钥
-# 可选：默认使用的模型版本，不配置则默认使用 doubao-seedream-4-0-250828
-ARK_API_MODEL=doubao-seedream-5-0-260128
+ARK_API_MODEL=doubao-seedream-4-0-250828
 ```
 
 ## 使用方式

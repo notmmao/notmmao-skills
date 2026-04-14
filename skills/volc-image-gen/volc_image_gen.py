@@ -3,10 +3,7 @@ import os
 import argparse
 import requests
 import hashlib
-from dotenv import load_dotenv
 
-# 加载环境变量
-load_dotenv(os.path.expanduser("~/.openclaw/.env"))
 ARK_API_KEY = os.getenv("ARK_API_KEY")
 ARK_API_MODEL = os.getenv("ARK_API_MODEL", "doubao-seedream-4-0-250828")
 API_URL = "https://ark.cn-beijing.volces.com/api/v3/images/generations"
@@ -17,7 +14,7 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 def generate_image(prompt, images=None, model=ARK_API_MODEL, size="2K", watermark=True):
     if not ARK_API_KEY:
-        return {"error": "未找到ARK_API_KEY，请在.env文件中配置"}
+        return {"error": "未找到 ARK_API_KEY 环境变量，请设置后重试"}
     
     headers = {
         "Content-Type": "application/json",
