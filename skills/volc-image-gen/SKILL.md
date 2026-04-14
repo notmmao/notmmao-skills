@@ -78,6 +78,6 @@ ARK_API_MODEL=doubao-seedream-4-0-250828
 ## 实现逻辑
 1. 解析用户输入的提示词和参数
 2. 加载`.env`中的`ARK_API_KEY`环境变量
-3. 调用`volc_image_gen.py`脚本执行生成请求
+3. 调用`./scripts/volc_image_gen.py`脚本执行生成请求
 4. 返回生成的图片URL、尺寸，若指定保存路径则自动下载到本地
 5. 可直接通过`MEDIA:`指令将生成的图片发送给用户
