@@ -33,6 +33,7 @@
 |--------|----------|
 | `rest-tester` | 生成符合REST Client规范的.http测试脚本，支持变量系统、多种认证方式、链式请求，用于API接口测试 |
 | `codebase-visualizer` | 生成代码库交互式可视化HTML树状图，可折叠目录、显示文件大小，用于探索新项目结构 |
+| `conversation-viewer` | 查看、导出和分析 Claude Code 会话历史，支持列表查询、导出HTML、批量处理，用于回顾对话记录和分析AI行为 |
 
 ## 🚀 安装
 
@@ -61,6 +62,7 @@ npx skills add https://github.com/notmmao/notmmao-skills --skill zhipu-searcher
 # 开发工具类
 npx skills add https://github.com/notmmao/notmmao-skills --skill rest-tester
 npx skills add https://github.com/notmmao/notmmao-skills --skill codebase-visualizer
+npx skills add https://github.com/notmmao/notmmao-skills --skill conversation-viewer
 ```
 
 ### 升级已安装的技能
@@ -111,6 +113,8 @@ ZHIPU_API_TOKEN=你的智谱AI API Token
 - `用欢快的女声朗读这段内容：你好，我是你的AI助手`
 - `生成一张星际穿越风格的4K图片：黑洞旁的复古列车`
 - `总结这个视频的内容：https://www.douyin.com/video/xxxxxx`
+- `导出我最近的5个会话记录为HTML`
+- `查看当前项目有哪些会话`
 
 每个技能目录下的`SKILL.md`文件包含详细的使用说明和参数配置。
 
