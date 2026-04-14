@@ -35,39 +35,44 @@
 | `codebase-visualizer` | 生成代码库交互式可视化HTML树状图，可折叠目录、显示文件大小，用于探索新项目结构 |
 
 ## 🚀 安装
-### 方法1：推荐使用npx安装（通用所有支持skills协议的平台）
+
+### 全量安装
 ```bash
-# 全量安装所有技能
 npx skills add https://github.com/notmmao/notmmao-skills
+```
 
-# 安装单个技能（示例：安装yt-audio-download）
+### 单独安装
+复制对应的命令即可安装单个技能：
+
+```bash
+# 音视频处理类
 npx skills add https://github.com/notmmao/notmmao-skills --skill yt-audio-download
+npx skills add https://github.com/notmmao/notmmao-skills --skill local-whisper-asr
+npx skills add https://github.com/notmmao/notmmao-skills --skill audio-transcribe-summary
 
-# 升级已安装的技能
+# AI生成类
+npx skills add https://github.com/notmmao/notmmao-skills --skill minimax-music
+npx skills add https://github.com/notmmao/notmmao-skills --skill mimo-tts
+npx skills add https://github.com/notmmao/notmmao-skills --skill volc-image-gen
+
+# 搜索工具类
+npx skills add https://github.com/notmmao/notmmao-skills --skill zhipu-searcher
+
+# 开发工具类
+npx skills add https://github.com/notmmao/notmmao-skills --skill rest-tester
+npx skills add https://github.com/notmmao/notmmao-skills --skill codebase-visualizer
+```
+
+### 升级已安装的技能
+```bash
 npx skills upgrade https://github.com/notmmao/notmmao-skills
 ```
 
-### 方法2：OpenClaw平台专属安装
-#### 一键安装所有技能
-```bash
-openclaw skill install git+https://github.com/notmmao/notmmao-skills.git
-```
-
-#### 安装单个技能
-```bash
-# 示例：安装yt-audio-download
-openclaw skill install git+https://github.com/notmmao/notmmao-skills.git#subdirectory=skills/yt-audio-download
-```
-
-### 方法3：手动安装
-1. 克隆仓库到本地：
-```bash
-git clone https://github.com/notmmao/notmmao-skills.git ~/.openclaw/skills/notmmao-skills
-```
-2. 在OpenClaw配置中添加技能目录即可。
-
 ## 🔧 配置
-所有需要API密钥的技能，均从统一的环境变量配置文件`~/.openclaw/.env`中读取：
+
+### 方式1：环境变量文件（OpenClaw等）
+将以下内容保存到 `~/.openclaw/.env`：
+
 ```env
 # minimax-music 所需
 MINIMAX_API_KEY=你的MiniMax API密钥
@@ -82,6 +87,22 @@ ARK_API_MODEL=可选，自定义模型版本
 
 # zhipu-searcher 所需
 ZHIPU_API_TOKEN=你的智谱AI API Token
+```
+
+### 方式2：Claude Desktop配置（Claude Code/Cursor等）
+编辑 `~/.claude/settings.json` 或项目的 `.claude/settings.local.json`，添加 `env` 字段：
+
+```json
+{
+  "env": {
+    "MINIMAX_API_KEY": "你的MiniMax API密钥",
+    "MIMO_API_KEY": "你的小米MiMo API密钥",
+    "MIMO_API_URL": "可选，自定义API端点",
+    "ARK_API_KEY": "你的火山引擎API密钥",
+    "ARK_API_MODEL": "可选，自定义模型版本",
+    "ZHIPU_API_TOKEN": "你的智谱AI API Token"
+  }
+}
 ```
 
 ## 📝 使用
