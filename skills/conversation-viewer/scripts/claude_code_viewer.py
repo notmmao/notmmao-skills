@@ -269,11 +269,20 @@ def render_html(entries, output_path: Path = None):
             pass
 
     for entry in entries:
+        # 跳过元数据消息（系统生成的提示、命令执行信息等）
+        if entry.get("isMeta", False):
+            continue
+
         entry_type = entry.get("type", "")
         message = entry.get("message", {})
 
         if entry_type == "file-history-snapshot":
             continue  # 跳过快照
+
+        # 跳过命令相关消息（包含 <command-name> 标签的内容）
+        content = message.get("content", "")
+        if isinstance(content, str) and "<command-name>" in content:
+            continue
 
         seq += 1
         ts = entry.get("timestamp", "")
