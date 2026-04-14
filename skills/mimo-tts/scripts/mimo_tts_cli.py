@@ -10,6 +10,20 @@ import requests
 import base64
 import argparse
 from typing import Literal, Optional
+from pathlib import Path
+from dotenv import load_dotenv
+
+# 加载 .env 文件（优先从脚本目录查找，其次从当前目录）
+_script_dir = Path(__file__).parent.parent
+_env_paths = [
+    _script_dir / ".env",
+    Path.cwd() / ".env",
+    Path.home() / ".env",
+]
+load_dotenv(_env_paths[0])  # 优先加载技能目录的 .env
+for env_path in _env_paths[1:]:
+    if env_path.exists():
+        load_dotenv(env_path, override=True)
 
 
 # API 配置
@@ -49,6 +63,9 @@ def mimo_text_to_speech(
         raise ValueError("文本长度不能超过 10000 字符")
     if speed < 0.5 or speed > 2.0:
         raise ValueError("语速必须在 0.5-2.0 范围内")
+
+    # 记录用户是否指定了输出路径
+    user_specified_path = bool(output_path)
 
     # 缓存逻辑
     if not output_path:
@@ -127,7 +144,9 @@ def mimo_text_to_speech(
     audio_bytes = base64.b64decode(audio_b64)
 
     # 保存文件
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    output_dir = os.path.dirname(output_path)
+    if output_dir:  # 只有当目录路径非空时才创建
+        os.makedirs(output_dir, exist_ok=True)
     with open(output_path, "wb") as f:
         f.write(audio_bytes)
 
@@ -144,25 +163,61 @@ def mimo_text_to_speech(
         "style": style
     }
 
-    # 生成友好命名副本
-    import re
-    import shutil
-    # 简化文本：取前10个字符，替换特殊字符
-    simplified_text = re.sub(r'[^\w\u4e00-\u9fa5]', '_', text.strip()[:10])
-    # 处理风格
-    processed_style = re.sub(r'[^\w\u4e00-\u9fa5]', '_', style.strip()[:10]) if style.strip() else ""
-    # 生成友好文件名
-    if processed_style:
-        friendly_filename = f"{simplified_text}_{processed_style}.{audio_format}"
+    # 只有未指定输出路径时，才生成友好命名副本到缓存目录
+    if not user_specified_path:
+        import re
+        import shutil
+        # 简化文本：取前10个字符，替换特殊字符
+        simplified_text = re.sub(r'[^\w\u4e00-\u9fa5]', '_', text.strip()[:10])
+        # 处理风格
+        processed_style = re.sub(r'[^\w\u4e00-\u9fa5]', '_', style.strip()[:10]) if style.strip() else ""
+        # 生成友好文件名
+        if processed_style:
+            friendly_filename = f"{simplified_text}_{processed_style}.{audio_format}"
+        else:
+            friendly_filename = f"{simplified_text}.{audio_format}"
+        friendly_path = os.path.join(CACHE_DIR, friendly_filename)
+        # 拷贝文件
+        shutil.copy2(output_path, friendly_path)
+        result["friendly_path"] = os.path.abspath(friendly_path)
+        result["friendly_filename"] = friendly_filename
     else:
-        friendly_filename = f"{simplified_text}.{audio_format}"
-    friendly_path = os.path.join(CACHE_DIR, friendly_filename)
-    # 拷贝文件
-    shutil.copy2(output_path, friendly_path)
-    result["friendly_path"] = os.path.abspath(friendly_path)
-    result["friendly_filename"] = friendly_filename
+        # 用户指定路径时，使用原始文件名
+        result["friendly_path"] = result["abs_path"]
+        result["friendly_filename"] = os.path.basename(output_path)
 
     return result
+
+
+def _get_audio_duration(file_path: str) -> float:
+    """获取音频时长（秒）"""
+    try:
+        from mutagen.mp3 import MP3
+        from mutagen.wave import WAVE
+        path = Path(file_path)
+        if path.suffix.lower() == '.mp3':
+            audio = MP3(file_path)
+            return audio.info.length
+        elif path.suffix.lower() == '.wav':
+            audio = WAVE(file_path)
+            return audio.info.length
+        elif path.suffix.lower() == '.pcm':
+            # PCM 无格式头，无法直接计算时长
+            return 0.0
+    except Exception:
+        pass
+    return 0.0
+
+
+def _format_duration(seconds: float) -> str:
+    """格式化时长显示"""
+    if seconds <= 0:
+        return "未知"
+    mins = int(seconds // 60)
+    secs = seconds % 60
+    if mins > 0:
+        return f"{mins}分{secs:.1f}秒"
+    return f"{secs:.1f}秒"
 
 
 def main():
@@ -175,8 +230,18 @@ def main():
     parser.add_argument("-s", "--speed", type=float, default=1.0, help="语速倍率 0.5-2.0，默认1.0")
     parser.add_argument("-t", "--style", default="", help="朗读风格描述，如\"欢快的语气\"、\"温柔的声音\"")
     parser.add_argument("-j", "--json", action="store_true", help="以JSON格式输出结果")
+    parser.add_argument("-q", "--quiet", action="store_true", help="安静模式，仅输出文件路径")
 
     args = parser.parse_args()
+
+    # 检测是否有输入内容
+    has_stdin = not sys.stdin.isatty()
+    has_input = args.text or args.file or has_stdin
+
+    # 无任何输入时打印帮助
+    if not has_input:
+        parser.print_help()
+        sys.exit(0)
 
     # 优先从文件读取文本
     if args.file:
@@ -188,6 +253,12 @@ def main():
     elif not args.text:
         args.text = sys.stdin.read().strip()
 
+    # 确保有文本内容
+    if not args.text:
+        print("❌ 错误: 未提供文本内容", file=sys.stderr)
+        parser.print_help()
+        sys.exit(1)
+
     try:
         result = mimo_text_to_speech(
             text=args.text,
@@ -197,15 +268,34 @@ def main():
             speed=args.speed,
             style=args.style
         )
+
+        # 获取音频时长
+        duration = _get_audio_duration(result['abs_path'])
+        result['duration_seconds'] = duration
+
         if args.json:
             print(json.dumps(result, ensure_ascii=False, indent=2))
+        elif args.quiet:
+            # 安静模式：仅输出文件路径
+            print(result['friendly_path'])
         else:
+            # 默认输出：完整信息
             print(f"✅ {result['message']}")
-            print(f"📁 缓存路径: {result['abs_path']}")
-            print(f"📄 友好命名: {result['friendly_filename']}")
-            print(f"📁 副本路径: {result['friendly_path']}")
-            print(f"📦 文件大小: {result['file_size'] / 1024:.2f} KB")
+            print()
+            print("📋 音频信息:")
+            print(f"   • 文件名: {result['friendly_filename']}")
+            print(f"   • 文件路径: {result['friendly_path']}")
+            print(f"   • 格式: {result['format'].upper()}")
+            print(f"   • 大小: {result['file_size'] / 1024:.2f} KB")
+            print(f"   • 时长: {_format_duration(duration)}")
+            print()
+            print("🎛️ 合成参数:")
+            print(f"   • 音色: {result['voice']}")
+            print(f"   • 语速: {result['speed']}x")
+            if result['style']:
+                print(f"   • 风格: {result['style']}")
             if result['cached']:
+                print()
                 print("💾 来自缓存")
     except Exception as e:
         error_result = {"status": "error", "message": str(e)}
