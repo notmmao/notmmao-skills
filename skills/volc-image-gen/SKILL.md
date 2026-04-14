@@ -26,7 +26,7 @@ metadata: {"openclaw":{"emoji":"🎨","requires":{"env":["ARK_API_KEY"]}}}
 ✅ 默认自动缓存生成的图片到 ~/.cache/volc-image-gen/ 目录，自动去重命名
 
 ## 前置配置
-请确保在 `/home/ota/.openclaw/.env` 文件中配置相关参数：
+请确保在 `~/.openclaw/.env` 文件中配置相关参数：
 ```env
 # 必填：火山引擎API密钥
 ARK_API_KEY=你的火山引擎API密钥

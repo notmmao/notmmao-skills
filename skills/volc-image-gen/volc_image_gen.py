@@ -1,4 +1,4 @@
-#!/home/ota/.openclaw/claw_venv/bin/python
+#!/usr/bin/env python3
 import os
 import argparse
 import requests
@@ -6,7 +6,7 @@ import hashlib
 from dotenv import load_dotenv
 
 # 加载环境变量
-load_dotenv("/home/ota/.openclaw/.env")
+load_dotenv(os.path.expanduser("~/.openclaw/.env"))
 ARK_API_KEY = os.getenv("ARK_API_KEY")
 ARK_API_MODEL = os.getenv("ARK_API_MODEL", "doubao-seedream-4-0-250828")
 API_URL = "https://ark.cn-beijing.volces.com/api/v3/images/generations"

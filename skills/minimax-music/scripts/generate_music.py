@@ -1,4 +1,4 @@
-#!/home/ota/.openclaw/claw_venv/bin/python
+#!/usr/bin/env python3
 """
 MiniMax Music Generation CLI
 使用 MiniMax API 将歌词转换为音乐
@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 import requests
 
 # 加载统一环境变量
-load_dotenv("/home/ota/.openclaw/.env")
+load_dotenv(os.path.expanduser("~/.openclaw/.env"))
 
 # 默认配置
 DEFAULT_MODEL = "music-2.6"
@@ -35,7 +35,7 @@ def get_api_key() -> str:
     api_key = os.environ.get("MINIMAX_API_KEY")
     if not api_key:
         print("错误: 未找到 MINIMAX_API_KEY", file=sys.stderr)
-        print("\n请在 /home/ota/.openclaw/.env 文件中添加配置:", file=sys.stderr)
+        print("\n请在 ~/.openclaw/.env 文件中添加配置:", file=sys.stderr)
         print("  MINIMAX_API_KEY=你的MiniMax API密钥", file=sys.stderr)
         sys.exit(1)
     return api_key

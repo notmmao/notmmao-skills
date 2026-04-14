@@ -9,7 +9,7 @@ description: 使用 MiniMax API 生成音乐。当用户需要生成音乐、创
 
 ## 前置要求
 
-- 在 `/home/ota/.openclaw/.env` 文件中配置 `MINIMAX_API_KEY` 环境变量：
+- 在 `~/.openclaw/.env` 文件中配置 `MINIMAX_API_KEY` 环境变量：
 ```env
 MINIMAX_API_KEY=你的MiniMax API密钥
 ```
