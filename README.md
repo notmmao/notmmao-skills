@@ -23,6 +23,11 @@
 | `mimo-tts` | 小米MiMo语音合成技能，支持自定义音色、语速、朗读风格、方言，自带缓存，支持mp3/wav/pcm三种格式输出 |
 | `volc-image-gen` | 火山引擎豆包AI绘画技能，支持文生图、图生图、多参考图融合，支持2K/4K超清分辨率，电影级画质 |
 
+### 搜索工具类
+| 技能名 | 功能描述 |
+|--------|----------|
+| `zhipu-searcher` | 智谱AI网络搜索技能，支持自定义搜索条件、时间过滤、域名过滤，实时获取公开网络信息 |
+
 ## 🚀 安装
 ### 方法1：推荐使用npx安装（通用所有支持skills协议的平台）
 ```bash
@@ -68,6 +73,9 @@ MIMO_API_URL=可选，自定义API端点
 # volc-image-gen 所需
 ARK_API_KEY=你的火山引擎API密钥
 ARK_API_MODEL=可选，自定义模型版本
+
+# zhipu-searcher 所需
+ZHIPU_API_TOKEN=你的智谱AI API Token
 ```
 
 ## 📝 使用
