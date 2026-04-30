@@ -34,6 +34,7 @@
 | `rest-tester` | 生成符合REST Client规范的.http测试脚本，支持变量系统、多种认证方式、链式请求，用于API接口测试 |
 | `codebase-visualizer` | 生成代码库交互式可视化HTML树状图，可折叠目录、显示文件大小，用于探索新项目结构 |
 | `conversation-viewer` | 查看、导出和分析 Claude Code 会话历史，支持列表查询、导出HTML、批量处理，用于回顾对话记录和分析AI行为 |
+| `feishu-sync` | 飞书文档同步工具，支持从Wiki/Docx下载文档到本地Markdown，自动将内嵌表格展开为Markdown表格 |
 
 ## 🚀 安装
 
@@ -63,6 +64,7 @@ npx skills add https://github.com/notmmao/notmmao-skills --skill zhipu-searcher
 npx skills add https://github.com/notmmao/notmmao-skills --skill rest-tester
 npx skills add https://github.com/notmmao/notmmao-skills --skill codebase-visualizer
 npx skills add https://github.com/notmmao/notmmao-skills --skill conversation-viewer
+npx skills add https://github.com/notmmao/notmmao-skills --skill feishu-sync
 ```
 
 ### 升级已安装的技能
