@@ -1,0 +1,33 @@
+{
+  "skill_name": "project-manager",
+  "evals": [
+    {
+      "id": 1,
+      "name": "basic-initialization",
+      "prompt": "初始化项目，使用默认配置",
+      "expected_output": "应该创建完整的项目管理结构，包括 .claude/PROJECT_CONFIG.yaml、STATUS/ 目录（包含4个md文件）、CLAUDE.md、ROADMAP.md、LOG.md 和其他必要的目录。配置文件应使用默认值。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "custom-initialization",
+      "prompt": "初始化一个名为 'my-awesome-project' 的项目，负责人是 'Alice'，用户角色选择 '开发者 + 架构师'，主分支使用 'master'，功能分支使用 'feature'",
+      "expected_output": "应该创建项目管理结构，配置文件中项目名称为 'my-awesome-project'，负责人为 'Alice'，用户角色为 '开发者 + 架构师'，主分支为 'master'，功能分支为 'feature'。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "minimal-output",
+      "prompt": "我想设置一个简单的项目管理系统，只需要基础的目录结构和配置，不需要 P0 任务",
+      "expected_output": "应该创建基础的项目管理结构，包括配置文件和状态文件，但 P0 任务部分应为空或不存在。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "chinese-directories",
+      "prompt": "帮我初始化项目，目录名称使用中文",
+      "expected_output": "应该创建包含中文目录名的项目管理结构（需求、方案、输出、工作流等）。",
+      "files": []
+    }
+  ]
+}

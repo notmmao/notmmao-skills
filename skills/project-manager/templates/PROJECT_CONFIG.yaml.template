@@ -1,0 +1,53 @@
+# 项目配置文件
+# 此文件定义项目特定的元数据，便于迁移到其他项目
+
+project:
+  name: "{{PROJECT_NAME}}"
+  description: "{{PROJECT_DESCRIPTION}}"
+  owner: "{{OWNER_NAME}}"
+  created: "{{TODAY}}"
+
+# 角色定义
+roles:
+  user: "{{USER_ROLE}}"
+  user_behavior: "主动理解意图，引导式、选择式交互"
+  assistant: "AI Agent，负责需求分析、测试规划、状态跟踪和验证工作"
+
+# 分支策略
+branches:
+  main: "{{MAIN_BRANCH}}"        # 主分支
+  feature: "{{FEATURE_BRANCH}}"  # 功能分支
+  user_prefix: "{{USER_PREFIX}}" # 用户工作分支前缀
+  merge_flow: "{{MERGE_FLOW}}"   # 合并流程描述
+
+# 目录结构
+directories:
+  root:
+    pm: ".pm"
+  pm:
+    config: "CONFIG"
+    status: "STATUS"
+    workflows: "工作流"
+    requirements: "需求"
+    output: "输出"
+    proposals: "方案"
+    scripts: "scripts"
+    logs: "LOGS"
+
+# 指令配置（可选，用于覆盖默认指令行为）
+commands:
+  continue:
+    description: "执行下一个待办任务"
+    priority: 100
+  status:
+    description: "查看当前项目状态"
+    priority: 90
+  plan:
+    description: "查看待办任务列表"
+    priority: 80
+
+# P0 任务标识（可选）
+priority_tasks:
+  # - name: "关键任务名称"
+  #   deadline: "YYYY-MM-DD"
+  #   goal: "任务目标描述"
