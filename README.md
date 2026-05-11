@@ -14,6 +14,7 @@
 |--------|----------|
 | `yt-audio-download` | 基于yt-dlp的通用视频平台音频下载工具，支持B站、抖音、YouTube等主流平台，自动转换为192kbps MP3，内置去重缓存 |
 | `local-whisper-asr` | 完全离线的Whisper语音转写技能，支持几乎所有音视频格式，无需联网，输出txt/srt/vtt/json四种格式结果 |
+| `zhipu-asr` | 基于智谱GLM-ASR-2512模型的语音转文本技能，支持流式输出、热词增强、长文本上下文提示，适合短音频（≤30秒）转录 |
 | `audio-transcribe-summary` | 音视频处理全流程技能：自动下载/提取音频 → 离线转写 → 结构化总结 → 自动导出Markdown/PDF，支持会议记录、课程整理、视频内容提取等场景 |
 
 ### AI生成类
@@ -52,6 +53,7 @@ npx skills add https://github.com/notmmao/notmmao-skills
 # 音视频处理类
 npx skills add https://github.com/notmmao/notmmao-skills --skill yt-audio-download
 npx skills add https://github.com/notmmao/notmmao-skills --skill local-whisper-asr
+npx skills add https://github.com/notmmao/notmmao-skills --skill zhipu-asr
 npx skills add https://github.com/notmmao/notmmao-skills --skill audio-transcribe-summary
 
 # AI生成类
