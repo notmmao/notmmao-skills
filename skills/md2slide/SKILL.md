@@ -146,10 +146,17 @@ Fenced code blocks render with a dark background, monospace font, and rounded co
 
 ## Navigation & output
 
-- **Keyboard**: `←` `→` `Space` to navigate; `Home` / `End` to jump to first/last
+- **Keyboard**: `←` `→` `Space` to navigate; `Home` / `End` to jump to first/last; **`Esc` to open slide index overlay**
 - **Touch**: Swipe left/right on mobile
 - **Print**: `Ctrl+P` prints all slides; nav controls auto-hide
 - **Single file**: Everything embedded — no external dependencies
+
+### Slide Index Overlay (ESC)
+
+Press `Esc` at any time to open a full-screen overlay listing all slides with their titles and numbers. Click any item to jump directly to that slide. Press `Esc` again or click the × button / backdrop to close the overlay.
+- Works independently of the `--toc` option
+- Responsive layout: two-column on desktop, single-column on mobile
+- Auto-hides when printing
 
 ## Live Demos
 

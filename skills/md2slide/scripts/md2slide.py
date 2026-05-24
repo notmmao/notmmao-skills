@@ -446,7 +446,7 @@ CSS_BASE = """
         /* Card grid */
         .slide .card-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
             margin: 24px 0;
         }}
@@ -456,6 +456,8 @@ CSS_BASE = """
             border-radius: 8px;
             border: 1px solid {border};
             transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 0;
+            overflow-wrap: break-word;
         }}
         .slide .card-grid .card:hover {{
             transform: translateY(-2px);
@@ -611,6 +613,105 @@ CSS_EXTRA = """
             .slide-counter {{ bottom: 22px; left: 20px; }}
             .slide-footer {{ left: 24px; right: 24px; }}
         }}
+
+        /* ===== SLIDE INDEX OVERLAY ===== */
+        .slide-index-overlay {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }}
+        .slide-index-overlay.active {{
+            display: flex;
+        }}
+        .slide-index-container {{
+            background: {bg};
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }}
+        .slide-index-container h2 {{
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+            color: {fg};
+            border-bottom: 2px solid {border};
+            padding-bottom: 12px;
+        }}
+        .slide-index-list {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+        }}
+        .slide-index-item {{
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(128,128,128,0.06);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid {border};
+            text-align: left;
+        }}
+        .slide-index-item:hover {{
+            background: rgba(128,128,128,0.12);
+            border-color: {accent};
+        }}
+        .slide-index-item .idx-num {{
+            width: 32px;
+            height: 32px;
+            background: {accent};
+            color: {bg};
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-size: 0.85rem;
+            margin-right: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }}
+        .slide-index-item .idx-name {{
+            font-size: 0.95rem;
+            color: {fg2};
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }}
+        .slide-index-close {{
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            user-select: none;
+            line-height: 1;
+        }}
+        .slide-index-close:hover {{
+            opacity: 1;
+        }}
+        @media (max-width: 768px) {{
+            .slide-index-list {{ grid-template-columns: 1fr; }}
+            .slide-index-container {{ padding: 24px; max-height: 85vh; }}
+        }}
+        @media print {{
+            .slide-index-overlay {{ display: none !important; }}
+        }}
 """
 
 # ---------------------------------------------------------------------------
@@ -633,7 +734,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 {slides_html}
 
     <div class="slide-counter" id="slide-counter">1 / {total}</div>
-    <div class="keyboard-hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · <kbd>Space</kbd></div>
+    <div class="keyboard-hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · <kbd>Space</kbd> · <kbd>Esc</kbd> 目录</div>
     <div class="navigation">
         <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">◀</button>
         <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">▶</button>
@@ -664,7 +765,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }}
         }}
 
+        function toggleIndex() {{
+            const overlay = document.getElementById('slide-index-overlay');
+            overlay.classList.toggle('active');
+        }}
+
+        function jumpToSlide(n) {{
+            currentSlide = n;
+            updateSlide();
+            toggleIndex();
+        }}
+
         document.addEventListener('keydown', (e) => {{
+            if (e.key === 'Escape') {{
+                e.preventDefault();
+                toggleIndex();
+                return;
+            }}
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
             if (e.key === 'Home') {{ currentSlide = 1; updateSlide(); }}
@@ -682,6 +799,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
         updateSlide();
     </script>
+
+    <!-- Slide Index Overlay -->
+    <div class="slide-index-overlay" id="slide-index-overlay" onclick="if(event.target===this)toggleIndex()">
+        <div class="slide-index-close" onclick="toggleIndex()">×</div>
+        <div class="slide-index-container">
+            <h2>目录 · Slide Index</h2>
+            <div class="slide-index-list" id="slide-index-list">
+                {index_items}
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 """
@@ -848,23 +976,65 @@ def _process_pills(html: str) -> str:
 
 
 def _split_markdown_blocks(text: str) -> list[str]:
-    """Split markdown text into content blocks separated by blank lines.
-    Skips leading/trailing blank lines and filters empty blocks."""
+    """Split markdown text into content blocks separated by blank lines
+    or markdown headings.  Headings (lines starting with #) always start
+    a new block even when there is no blank line before them.
+    After the initial split, single-line blocks that look like card titles
+    (headings, bold text, emoji + bold) are merged with the following
+    non-title block so title and content stay together in a card.
+    """
     lines = text.splitlines()
-    blocks = []
-    current = []
+    raw_blocks: list[str] = []
+    current: list[str] = []
+
+    def _flush() -> None:
+        if current:
+            b = '\n'.join(current).strip()
+            if b:
+                raw_blocks.append(b)
+            current.clear()
+
     for line in lines:
         stripped = line.strip()
         if stripped == '':
-            if current:
-                blocks.append('\n'.join(current))
-                current = []
-            # skip consecutive/leading blank lines
+            _flush()
+            continue
+        # heading always starts a new block
+        if stripped.startswith('#') and re.match(r'^#{1,6}\s', stripped):
+            _flush()
+            current.append(line)
         else:
             current.append(line)
-    if current:
-        blocks.append('\n'.join(current))
-    return [b for b in blocks if b.strip()]
+
+    _flush()
+
+    # Merge title-only blocks with the following content block
+    TITLE_RE = re.compile(
+        r'^(#{1,6}\s|(\*\*[^*]+\*\*)$|'
+        r'[🎨🚀🔒📊💡✅⚠️❌🔮🎯⭐🔥🚀💎🎉🎊🎁🎄🎃🎅🤶🧑‍🎄🎆🎇🧨✨🎈🎉🎊🎋🎍🎎🎏🎐🎑🧧🎀🎁🎗️🎟️🎫🎖️🏆🏅🥇🥈🥉⚽⚾🏀🏐🏈🏉🎾🥎🏏🏑🏒🥍🏓🏸🥊🥋🥌⛸️🛷🥅🎯⛳🎣🤿🎽🥋🛹🛼🛷🎿⛷️🏂🏋️🤼🤽🤾🤺🤸🧘🏌️🧖🧗🤹🎪🎭🩰🎨🎬🎤🎧🎼🎹🥁🎷🎺🎸🪕🎻🎲♟️🎯🎳🎮🎰🧩]\s+.*\*\*[^*]+\*\*)$'
+    )
+
+    merged: list[str] = []
+    i = 0
+    while i < len(raw_blocks):
+        b = raw_blocks[i]
+        is_title = False
+        if len(b.splitlines()) == 1:
+            is_title = bool(TITLE_RE.match(b.strip()))
+        if is_title and i + 1 < len(raw_blocks):
+            nxt = raw_blocks[i + 1]
+            nxt_lines = nxt.splitlines()
+            nxt_is_title = False
+            if len(nxt_lines) == 1:
+                nxt_is_title = bool(TITLE_RE.match(nxt_lines[0].strip()))
+            if not nxt_is_title:
+                merged.append(b + '\n\n' + nxt)
+                i += 2
+                continue
+        merged.append(b)
+        i += 1
+
+    return merged
 
 
 def _process_layout_hints(md_body: str) -> str:
@@ -938,6 +1108,10 @@ def _auto_detect_type(html: str) -> str:
 
     rich_tags = re.findall(r'<(h2|h3|pre|table|img)[ >]', html)
     if rich_tags or h1_count > 1 or text_len > 400:
+        return 'content'
+
+    # Any layout grid implies content slide
+    if re.search(r'<div class="(card-grid|two-col|three-col)"', html):
         return 'content'
 
     body_tags = re.findall(r'<(p|ul|ol|blockquote)[ >]', html)
@@ -1139,6 +1313,32 @@ Pill badges (inline):
     out_path = Path(args.output) if args.output else in_path.with_suffix('.html')
     total_slides = len(slide_divs)
 
+    # Build slide index overlay items
+    all_slide_titles = []
+    if args.toc:
+        all_slide_titles.append(("目录 · Table of Contents", 1))
+    for idx, (directives, body, proc, stype) in enumerate(processed_slides):
+        real_idx = idx + 1 + offset
+        t = ""
+        for pat in [r'^#\s+(.+)$', r'^##\s+(.+)$', r'^###\s+(.+)$']:
+            m = re.search(pat, body, re.MULTILINE)
+            if m:
+                t = m.group(1).strip()
+                t = t.split('|')[0].strip()
+                break
+        if not t:
+            t = body.strip().split('\n')[0][:60]
+            t = re.sub(r'^#{1,6}\s+', '', t)
+        all_slide_titles.append((t, real_idx))
+
+    index_items_html = '\n'.join(
+        f'                <div class="slide-index-item" onclick="jumpToSlide({num})">'
+        f'<span class="idx-num">{num}</span>'
+        f'<span class="idx-name">{t}</span>'
+        f'</div>'
+        for t, num in all_slide_titles
+    )
+
     # Final template interpolation
     final_html = HTML_TEMPLATE.format(
         title=title,
@@ -1146,6 +1346,7 @@ Pill badges (inline):
         custom_css=custom_css,
         slides_html='\n\n'.join(slide_divs),
         total=total_slides,
+        index_items=index_items_html,
     )
 
     # Inject TOC jump function if TOC enabled
