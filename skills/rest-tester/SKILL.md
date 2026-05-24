@@ -69,12 +69,27 @@ Content-Type: application/json
 ### 系统变量
 - `{{$guid}}` - UUID
 - `{{$timestamp}}` - 当前时间戳
-- `{{$timestamp -1 d}}` - 1天前
+- `{{$timestamp -1 d}}` - 1天前（支持偏移：`-1 d`、`+1 h`、`-30 m`）
 - `{{$datetime iso8601}}` - ISO格式时间
-- `{{$datetime rfc1123}}` - RFC1123格式时间  
+- `{{$datetime rfc1123}}` - RFC1123格式时间
 - `{{$randomInt 1 100}}` - 随机整数
-- `{{$processEnv PATH}}` - 环境变量
-- `{{$dotenv DB_HOST}}` - .env文件变量
+- `{{$processEnv VAR_NAME}}` - 从系统环境变量读取
+- `{{$dotenv VAR_NAME}}` - 从项目根目录 .env 文件读取
+
+#### 环境变量 vs .env 文件
+```http
+# 系统环境变量（已导出到系统）
+@baseUrl = {{$processEnv API_URL}}
+
+# .env 文件变量（项目根目录的 .env）
+@baseUrl = {{$dotenv API_URL}}
+@token = {{$dotenv GITLAB_TOKEN}}
+```
+
+**选择建议：**
+- 团队共享配置 → 用 `.env` 文件（提交到 git 的 `.env.example`）
+- 个人敏感配置 → 用环境变量（不提交）
+- CI/CD 环境 → 优先用环境变量
 
 ### 提示变量
 ```http
