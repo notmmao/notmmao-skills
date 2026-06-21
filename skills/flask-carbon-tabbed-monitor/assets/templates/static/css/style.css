@@ -1,0 +1,383 @@
+/* Carbon Design System — 风格参考 (基于 IBM Carbon) */
+
+/* =========================================================
+   1. Design Tokens
+   ========================================================= */
+:root {
+    /* Brand */
+    --color-primary: #0f62fe;
+    --color-on-primary: #ffffff;
+    --color-blue-60: #0043ce;
+    --color-blue-80: #002d9c;
+    --color-blue-hover: #0050e6;
+
+    /* Ink */
+    --color-ink: #161616;
+    --color-ink-muted: #525252;
+    --color-ink-subtle: #8c8c8c;
+
+    /* Surfaces */
+    --color-canvas: #ffffff;
+    --color-surface-1: #f4f4f4;
+    --color-surface-2: #e0e0e0;
+
+    /* Hairlines */
+    --color-hairline: #e0e0e0;
+    --color-hairline-strong: #161616;
+
+    /* Semantic */
+    --color-semantic-success: #24a148;
+    --color-semantic-warning: #f1c21b;
+    --color-semantic-error: #da1e28;
+    --color-semantic-info: #0f62fe;
+
+    /* Typography */
+    --font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", "Courier New", monospace;
+
+    --display-md-size: 42px;
+    --headline-size: 32px;
+    --card-title-size: 24px;
+    --subhead-size: 20px;
+    --body-lg-size: 18px;
+    --body-size: 16px;
+    --body-sm-size: 14px;
+    --caption-size: 12px;
+
+    --weight-light: 300;
+    --weight-regular: 400;
+    --weight-semibold: 600;
+
+    /* Spacing — 4px 基准网格 */
+    --spacing-xxs: 4px;
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-xxl: 48px;
+
+    /* Shape — 默认直角，pill 用于状态点 */
+    --rounded-none: 0px;
+    --rounded-pill: 9999px;
+}
+
+/* =========================================================
+   2. Reset & Base
+   ========================================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-size: 16px; }
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--body-size);
+    line-height: 1.5;
+    letter-spacing: 0.16px;
+    color: var(--color-ink);
+    background-color: var(--color-canvas);
+    min-height: 100vh;
+    padding: var(--spacing-md);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--weight-regular);
+    line-height: 1.25;
+    color: var(--color-ink);
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--color-blue-60);
+    text-decoration: underline;
+}
+
+code, pre {
+    font-family: var(--font-mono);
+    font-size: var(--body-sm-size);
+}
+
+/* =========================================================
+   3. Layout
+   ========================================================= */
+.container {
+    max-width: 1584px;
+    margin: 0 auto;
+}
+
+/* =========================================================
+   4. Header & Navigation
+   ========================================================= */
+.header {
+    background-color: var(--color-canvas);
+    border: 1px solid var(--color-hairline);
+    border-bottom: 1px solid var(--color-hairline-strong);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.header h1 {
+    font-size: var(--display-md-size);
+    font-weight: var(--weight-light);
+    line-height: 1.2;
+    margin-bottom: var(--spacing-sm);
+}
+
+.header-nav {
+    display: flex;
+    gap: 0;
+    margin-top: var(--spacing-md);
+    border-bottom: 1px solid var(--color-hairline);
+}
+
+.nav-tab {
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    font-size: var(--body-size);
+    color: var(--color-ink-muted);
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.nav-tab:hover {
+    background-color: var(--color-surface-1);
+    color: var(--color-ink);
+}
+
+.nav-tab.active {
+    color: var(--color-ink);
+    border-bottom-color: var(--color-primary);
+    font-weight: var(--weight-semibold);
+}
+
+/* =========================================================
+   5. Tab Panes
+   ========================================================= */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* =========================================================
+   6. Status Bar
+   ========================================================= */
+.status-bar {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--color-surface-1);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--body-sm-size);
+    color: var(--color-ink-muted);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--rounded-pill);
+    background-color: var(--color-surface-2);
+}
+
+.status-dot.active {
+    background-color: var(--color-semantic-success);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* =========================================================
+   7. Panel (Card)
+   ========================================================= */
+.panel {
+    background-color: var(--color-canvas);
+    border: 1px solid var(--color-hairline);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-hairline);
+}
+
+.panel-title {
+    font-size: var(--card-title-size);
+    font-weight: var(--weight-regular);
+    color: var(--color-ink);
+}
+
+/* =========================================================
+   8. Buttons
+   ========================================================= */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    padding: 12px 16px;
+    border: 1px solid transparent;
+    background-color: var(--color-canvas);
+    color: var(--color-primary);
+    font-family: var(--font-family);
+    font-size: var(--body-sm-size);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    text-decoration: none;
+}
+.btn:hover { background-color: var(--color-surface-1); }
+.btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border-color: var(--color-primary);
+}
+.btn-primary:hover {
+    background-color: var(--color-blue-hover);
+    border-color: var(--color-blue-hover);
+}
+
+.btn-secondary {
+    background-color: var(--color-ink);
+    color: #fff;
+    border-color: var(--color-ink);
+}
+
+.btn-tertiary {
+    background-color: var(--color-canvas);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+.btn-tertiary:hover {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.btn-ghost {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: transparent;
+}
+
+.btn-danger {
+    background-color: var(--color-semantic-error);
+    color: var(--color-on-primary);
+    border-color: var(--color-semantic-error);
+}
+
+.btn:disabled,
+.btn[disabled] {
+    background-color: var(--color-surface-2);
+    color: var(--color-ink-subtle);
+    border-color: var(--color-surface-2);
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   9. Forms
+   ========================================================= */
+.form-group { margin-bottom: var(--spacing-md); }
+
+.form-label {
+    display: block;
+    font-size: var(--body-sm-size);
+    color: var(--color-ink-muted);
+    margin-bottom: var(--spacing-xs);
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 11px 16px;
+    background-color: var(--color-surface-1);
+    color: var(--color-ink);
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--color-hairline);
+    font-family: var(--font-family);
+    font-size: var(--body-size);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.form-input:hover,
+.form-select:hover { background-color: var(--color-surface-2); }
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    background-color: var(--color-surface-1);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.button-row {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   10. Toast
+   ========================================================= */
+.toast {
+    position: fixed;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    background-color: var(--color-ink);
+    color: #fff;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--body-sm-size);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast.error {
+    background-color: var(--color-semantic-error);
+}
+
+/* =========================================================
+   11. Code / Result Display
+   ========================================================= */
+.result-pre {
+    background-color: var(--color-surface-1);
+    color: var(--color-ink);
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-hairline);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--body-sm-size);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* =========================================================
+   12. Responsive
+   ========================================================= */
+@media (max-width: 768px) {
+    body { padding: var(--spacing-xs); }
+    .header { padding: var(--spacing-md); }
+    .header h1 { font-size: var(--headline-size); }
+    .panel { padding: var(--spacing-md); }
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 id="headerTitle">{{ app_title }}</h1>
+
+            <!-- Tab 导航：复制 .nav-tab 即可扩展 -->
+            <nav class="header-nav" role="tablist" aria-label="功能模块">
+                <div class="nav-tab active" role="tab" data-tab="home" onclick="switchTab('home')">首页</div>
+                <div class="nav-tab" role="tab" data-tab="example" onclick="switchTab('example')">示例</div>
+            </nav>
+
+            <!-- 状态栏（可选，不需要可删除） -->
+            <div class="status-bar" id="statusBar">
+                <div class="status-item">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">就绪</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab 面板：每个 Tab 对应一个 .tab-pane，id 必须为 tab-{name} -->
+        <section class="tab-pane active" id="tab-home">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">首页</h2>
+                </div>
+                <p>在此处放置首页内容。</p>
+            </div>
+        </section>
+
+        <section class="tab-pane" id="tab-example">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">示例</h2>
+                </div>
+                <p>在此处放置示例内容。</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
