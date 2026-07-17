@@ -236,7 +236,11 @@ troubleshooting/
 
 README.md 是知识库的目录索引，必须与卡片同步维护。
 
-格式：按分类（一级目录）分组，每张卡片一行 `[标题](相对路径)`。
+格式：按分类（一级目录）分组，每张卡片一行 `[标题](相对路径) - 入库时间 - 作者 - 源仓库`。
+
+- 入库时间：卡片首次入库的日期（`date +%F`）。
+- 作者：取当前 git 提交作者（`git config user.name`）。
+- 源git仓库：来源项目的 git 远程地址（`git -C <源项目路径> remote get-url origin`）；无则填 `-`。
 
 ```markdown
 # Engineering Knowledge Base
@@ -246,14 +250,14 @@ README.md 是知识库的目录索引，必须与卡片同步维护。
 ## 目录
 
 ### docker
-- [Docker 容器 DNS 解析失败排查](docker/container-dns-resolution-failure.md)
+- [Docker 容器 DNS 解析失败排查](docker/container-dns-resolution-failure.md) - 2026-07-17 - 张三 - https://gitlab.carota.ai/foo/bar.git
 
 ### network
-- [Nginx upstream keepalive 502](network/nginx-upstream-keepalive-502.md)
+- [Nginx upstream keepalive 502](network/nginx-upstream-keepalive-502.md) - 2026-07-17 - 李四 - -
 ```
 
-- 新增卡片：在对应分类下追加一行；分类不存在则新建 `### 分类名` 标题。
-- 更新/删除卡片：同步修改或移除目录对应行。
+- 新增卡片：在对应分类下追加一行，填入入库时间、作者、源仓库；分类不存在则新建 `### 分类名` 标题。
+- 更新/删除卡片：同步修改或移除目录对应行；更新时保留原入库时间。
 
 # 发布
 
